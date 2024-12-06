@@ -53,22 +53,20 @@ Installed kubectl.
     In `appId`, `principalid`, `password` insert data from the previous steps
 
 5. Add the following secrets to your GitHub Actions repository:
-
-Secret Name	Value
+``
 AZURE_CLIENT_ID	<appId_from_step_2>
 AZURE_CLIENT_SECRET	<password_from_step_2>
 AZURE_TENANT_ID	<tenant_from_step_2>
 Also, add a secret named AZURE_CREDENTIALS with this JSON content:
 
-    ```
-  {
+         ```
+   {
       "clientId": "appId_from_step_2",
       "clientSecret": "appId_from_step_2",
       "subscriptionId": "put_your_value_subscriptionId",
       "tenantId": "appId_from_step_2"
-  }
-
-    ```
+   }
+       ```
 
 6. Run command for getting connection string for storing terraform state file and put value into terraform provider block located /infra/terraform/provider.tf
 IMPORTANT! This approach using Service Principal is not used in the production environment.
