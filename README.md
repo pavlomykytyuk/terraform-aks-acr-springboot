@@ -89,7 +89,7 @@ Create new secrets for login to ACR and run the Application Deployment pipeline
       REGISTRY_PASSWORD
 
 
-**7. The first thing to debug in your cluster is if your nodes are all registered correctly:**
+7. The first thing to debug in your cluster is if your nodes are all registered correctly:
     
 ```
 kubectl get pods: List all Pods.
@@ -111,9 +111,9 @@ Logs:
 ```
 kubectl logs <pod-name>: View logs of a Pod's primary container.
 kubectl logs <pod-name> -c <container-name>: View logs of a specific container.
-``
+```
 
-**8. Clean up**
+8. Clean up
 
 To clean up the resources, locate and execute the provided rip-infra.sh script.
 Ensure you verify the resources to avoid deleting unintended infrastructure.
