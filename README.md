@@ -70,7 +70,7 @@ Also, add a secret named AZURE_CREDENTIALS with this JSON content:
    }
    
 
-6. Run command for getting connection string for storing terraform state file and put value into terraform provider block located /infra/terraform/provider.tf.
+6. Obtain connection string for storing access_key value and put value into terraform provider block located /infra/terraform/provider.tf.
 IMPORTANT! This approach using Service Principal is not used in the production environment.
      
       ```
