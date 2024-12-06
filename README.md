@@ -53,11 +53,13 @@ Installed kubectl.
     In `appId`, `principalid`, `password` insert data from the previous steps
 
 5. Add the following secrets to your GitHub Actions repository:
-```
-AZURE_CLIENT_ID               	<appId_from_step_2>
-AZURE_CLIENT_SECRET	            <password_from_step_2>
-AZURE_TENANT_ID	                <tenant_from_step_2>
-```
+
+    ```
+   AZURE_CLIENT_ID               	<appId_from_step_2>
+   AZURE_CLIENT_SECRET	            <password_from_step_2>
+   AZURE_TENANT_ID	                <tenant_from_step_2>
+    ```
+
 Also, add a secret named AZURE_CREDENTIALS with this JSON content:
 
     ```
