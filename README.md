@@ -69,6 +69,7 @@ Also, add a secret named AZURE_CREDENTIALS with this JSON content:
       "subscriptionId": "put_your_value_subscriptionId",
       "tenantId": "appId_from_step_2"
    }
+   
     ```
 
 6. Run command for getting connection string for storing terraform state file and put value into terraform provider block located /infra/terraform/provider.tf
