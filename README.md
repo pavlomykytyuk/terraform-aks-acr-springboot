@@ -120,7 +120,8 @@ kubectl logs <pod-name> -c <container-name>: View logs of a specific container.
 To clean up the resources, locate and execute the provided rip-infra.sh script.
 Ensure you verify the resources to avoid deleting unintended infrastructure.
 
-**Important Notes**
+**Important Notes**.
+
 Service Principal Usage: The approach described here uses a Service Principal for authentication. Avoid using this in production environments without additional safeguards. Consider managed identities for better security.
 
 Terraform State File: Store the Terraform state file securely using Azure Blob Storage.
