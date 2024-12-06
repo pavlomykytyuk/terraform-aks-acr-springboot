@@ -1,0 +1,75 @@
+name: Deploy infrastructure
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Azure Login
+      run: | 
+       az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET}} --tenant ${{ secrets.AZURE_TENANT_ID}}
+    - name: Create Resource Group
+      run: |
+        RESOURCE_GROUP_NAME="terraformstorage"
+        LOCATION="northeurope"
+        az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
+    - name: Create Storage Account
+      run: |
+        RESOURCE_GROUP_NAME="terraformstorage"
+        STORAGE_ACCOUNT_NAME="gen1terraformstt" # Must be globally unique
+        LOCATION="northeurope"
+        az storage account create \
+          --name $STORAGE_ACCOUNT_NAME \
+          --resource-group $RESOURCE_GROUP_NAME \
+          --location $LOCATION \
+          --sku Standard_LRS
+    - name: Create Storage Container
+      run: |
+        RESOURCE_GROUP_NAME="terraformstorage"
+        STORAGE_ACCOUNT_NAME="gen1terraformstt"
+        CONTAINER_NAME="gen1terraformcontainer"
+        ACCOUNT_KEY=$(az storage account keys list \
+          --resource-group $RESOURCE_GROUP_NAME \
+          --account-name $STORAGE_ACCOUNT_NAME \
+          --query "[0].value" -o tsv)
+        az storage container create \
+          --name $CONTAINER_NAME \
+          --account-name $STORAGE_ACCOUNT_NAME \
+          --account-key $ACCOUNT_KEY 
+    - uses: actions/checkout@v4
+    - uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.9.5
+    - name: Terraform Init
+      working-directory: infra/terraform
+      run: | 
+          terraform init \
+          -backend-config="resource_group_name=terraformstorage" \
+          -backend-config="storage_account_name=gen1terraformstt" \
+          -backend-config="container_name=gen1terraformcontainer" \
+          -backend-config="key=gen1tf.tfstate"
+    - name: Check terraform syntax
+      working-directory: infra/terraform
+      run: |
+        terraform fmt -recursive   
+    - name: Terraform Plan
+      working-directory: infra/terraform
+      run: |
+        terraform plan
+    - name: Terraform Apply
+      working-directory: infra/terraform
+      run: |
+        terraform apply --auto-approve
